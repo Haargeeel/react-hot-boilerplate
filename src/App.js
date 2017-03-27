@@ -22,7 +22,7 @@ class App extends Component {
     console.log('props', this.props)
     const { title } = this.props
     return <div>
-      <h1 className={style.hello}>{title}</h1>
+      <h1 className={style.hello}>{`Title: ${title}`}</h1>
       <button onClick={this.handleButtonClick}>Change Title</button>
     </div>
   }
