@@ -20,6 +20,13 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+        enforce: 'pre',
+        loader: 'eslint-loader',
+        include: path.join(__dirname),
+        exclude: /node_modules/
+      },
+      {
+        test: /\.js$/,
         use: [
           'react-hot-loader',
           'babel-loader'
