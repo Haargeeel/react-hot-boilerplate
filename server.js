@@ -1,25 +1,33 @@
 const path = require('path')
 const webpack = require('webpack')
 const express = require('express')
-const config = require('./webpack.config')
+const config = process.env.NODE_ENV === 'development'
+  ? require('./config/development')
+  : require('./config/production')
 
 const app = express()
-const compiler = webpack(config)
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  publicPath: config.output.publicPath
-}))
+if (process.env.NODE_ENV === 'development') {
+  const compiler = webpack(config.webpackConfig)
+  app.use(require('webpack-dev-middleware')(compiler, {
+    publicPath: config.webpackConfig.output.publicPath
+  }))
 
-app.use(require('webpack-hot-middleware')(compiler))
+  app.use(require('webpack-hot-middleware')(compiler))
+
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'index.html'))
+  })
+}
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'))
 })
 
-app.listen(3000, function(err) {
-  if (err) {
-    return console.error(err)
-  }
+app.listen(config.port, function(err) {
+  if (err) return console.error(err)
 
-  console.log('Listening at http://localhost:3000/')
+  console.log(`Listening at http://localhost:${config.port}/`)
 })
