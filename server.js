@@ -10,7 +10,8 @@ const app = express()
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(config.webpackConfig)
   app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath: config.webpackConfig.output.publicPath
+    publicPath: config.webpackConfig.output.publicPath,
+    noInfo: true
   }))
 
   app.use(require('webpack-hot-middleware')(compiler))
