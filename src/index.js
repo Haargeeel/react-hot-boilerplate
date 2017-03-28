@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
-import thunkMiddleware from 'redux-thunk'
+import thunk from 'redux-thunk'
 
 import reducer from './reducer'
 import App from './App'
@@ -13,9 +13,13 @@ const initialState = {
   title: 'Hello World!'
 }
 
+const middleware = process.env.NODE_ENV === 'production'
+  ? [thunk]
+  : [thunk, createLogger()]
+
 const store = createStore(reducer,
                           initialState,
-                          applyMiddleware(thunkMiddleware))
+                          applyMiddleware(...middleware))
 
 if (module.hot) {
   module.hot.accept('./reducer', () => {
